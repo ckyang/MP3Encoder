@@ -6,10 +6,13 @@
 //  Copyright © 2019 Chung-kaiYang. All rights reserved.
 //
 
+#include <iostream>
 #include <lame/lame.h>
 #include <pthread.h>
 
 #include "encoder.h"
+
+using namespace std;
 
 encoder::encoder() {
 
@@ -19,7 +22,8 @@ encoder::~encoder() {
 
 }
 
-void encoder::encode() {
+void encoder::encode(const string& wavPath) {
+    cout << "abc " << wavPath << endl;
     int read, write;
 
     FILE *pcm = fopen("testcase.wav", "rb");

@@ -11,8 +11,31 @@
 #include "factory.h"
 #include "encoder.h"
 
+using namespace std;
+
 int main(void) {
+    cout << "Welcome to the WAV -> MP3 converter!" << endl;
     encoder* encoderObject = factory::GetEncoder();
-    encoderObject->encode();
+
+    if(!encoderObject) {
+        cerr << "Cannot initialize encoder object!" << endl;
+        return 1;
+    }
+
+    while(true) {
+        cout << "Please input the .wav files location: (Press Q to quit)" << endl;
+        string wavPath;
+        cin >> wavPath;
+
+        if(wavPath == "Q" || wavPath == "q") {
+            cout << "Bye!" << endl;
+            break;
+        }
+
+        cout << "Starting to encode .wav files in " << wavPath << "..." << endl;
+        encoderObject->encode(wavPath);
+        cout << "Encoding .wav files in " << wavPath << " successfully." << endl;
+    }
+
     return 0;
 }

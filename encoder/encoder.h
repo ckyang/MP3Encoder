@@ -9,6 +9,7 @@
 #ifndef encoder_h
 #define encoder_h
 
+#include <string>
 
 class encoder
 {
@@ -16,7 +17,7 @@ public:
     encoder();
     ~encoder();
 
-    void encode();
+    void encode(const std::string& wavPath);
 private:
 };
 
