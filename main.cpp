@@ -1,10 +1,12 @@
 #include <iostream>
 #include <lame/lame.h>
+#include <pthread.h>
 
 using namespace std;
 
 int main(void)
 {
+
     int read, write;
 
     FILE *pcm = fopen("testcase.wav", "rb");

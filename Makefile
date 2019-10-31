@@ -18,7 +18,7 @@ LNK_OPTIONS = lib/libmp3lame.a
 # INCLUDE directories for MP3Encoder
 #
 
-INCLUDE = -I.
+INCLUDE = -I. -Iinc/
 
 #
 # Build MP3Encoder
