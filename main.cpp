@@ -1,9 +1,15 @@
+//
+//  main.cpp
+//  MP3Encoder
+//
+//  Created by Chung-kaiYang on 10/31/19.
+//  Copyright © 2019 Chung-kaiYang. All rights reserved.
+//
+
 #include <iostream>
 
 #include "factory.h"
 #include "encoder.h"
-
-using namespace std;
 
 int main(void) {
     encoder* encoderObject = factory::GetEncoder();
