@@ -23,7 +23,7 @@ int main(void) {
     }
 
     while(true) {
-        cout << "Please input the .wav files location: (Press Q to quit)" << endl;
+        cout << endl << "Please input the .wav files location: (Press Q to quit)" << endl;
         string wavPath;
         cin >> wavPath;
 
@@ -32,9 +32,12 @@ int main(void) {
             break;
         }
 
-        cout << "Starting to encode .wav files in " << wavPath << "..." << endl;
-        encoderObject->encode(wavPath);
-        cout << "Encoding .wav files in " << wavPath << " successfully." << endl;
+        if(encoderObject->encode(wavPath)) {
+            cout << "Encoding all .wav files in " << wavPath << " successfully." << endl;
+        }
+        else {
+            cerr << "Failed to encode .wav files in " << wavPath << "!" << endl;
+        }
     }
 
     return 0;

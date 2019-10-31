@@ -10,6 +10,7 @@
 #define encoder_h
 
 #include <string>
+#include <vector>
 
 class encoder
 {
@@ -17,8 +18,12 @@ public:
     encoder();
     ~encoder();
 
-    void encode(const std::string& wavPath);
+    bool encode(const std::string& wavPath);
+
 private:
+    bool encodeOneFile(const std::string& wavFile);
+    std::vector<std::string> retrieveWavFiles(const std::string& wavPath);
+    std::string toLowerCase(const std::string& s);
 };
 
 #endif /* encoder_h */
