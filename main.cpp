@@ -7,8 +7,8 @@ int main(void)
 {
     int read, write;
 
-    FILE *pcm = fopen("file.pcm", "rb");
-    FILE *mp3 = fopen("file.mp3", "wb");
+    FILE *pcm = fopen("testcase.wav", "rb");
+    FILE *mp3 = fopen("testcase.mp3", "wb");
 
     const int PCM_SIZE = 8192;
     const int MP3_SIZE = 8192;

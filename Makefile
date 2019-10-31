@@ -12,8 +12,7 @@
 
 CC = /usr/bin/g++
 CC_OPTIONS = -std=gnu++14
-#LNK_OPTIONS = -L ./dylib/ -lcrypto -levent_core -levent_pthreads -levent -levent_extra -lssl 
-
+LNK_OPTIONS = lib/libmp3lame.a
 
 #
 # INCLUDE directories for MP3Encoder
@@ -21,15 +20,15 @@ CC_OPTIONS = -std=gnu++14
 
 INCLUDE = -I.
 
-
 #
 # Build MP3Encoder
 #
 
 MP3Encoder : \
 		./main.o
-	$(CC) $(LNK_OPTIONS) \
+		$(CC)\
 		./main.o\
+		$(LNK_OPTIONS)\
 		-o MP3Encoder
 
 clean : 
