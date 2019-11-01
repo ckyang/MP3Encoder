@@ -22,7 +22,7 @@ else
     endif
 endif
 
-CC = /usr/bin/g++
+CC = g++
 CC_OPTIONS = -std=gnu++14
 LNK_OPTIONS = lib/$(LAMELIB) -lpthread
 
