@@ -21,8 +21,13 @@ public:
     bool encode(const std::string& wavPath);
 
 private:
-    bool encodeOneFile(const std::string& wavFile);
-    std::vector<std::string> retrieveWavFiles(const std::string& wavPath);
+    static std::string m_wavPath;
+    static std::vector<std::string> m_wavFiles;
+
+    bool dispatchEncodeJobs();
+    static void* createEnc(void* idx);
+    static bool encodeOneFile(const std::string& wavFile);
+    void retrieveWavFiles();
     std::string toLowerCase(const std::string& s);
 };
 

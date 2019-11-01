@@ -19,6 +19,9 @@
 
 using namespace std;
 
+string encoder::m_wavPath = "";
+vector<string> encoder::m_wavFiles = vector<string>();
+
 encoder::encoder() {
 
 }
@@ -28,21 +31,31 @@ encoder::~encoder() {
 }
 
 bool encoder::encode(const string& wavPath) {
-    vector<string> wavFiles = retrieveWavFiles(wavPath);
+    m_wavPath = wavPath;
+    retrieveWavFiles();
 
-    if(wavFiles.empty()) {
+    if(m_wavFiles.empty()) {
         return false;
     }
 
+    return dispatchEncodeJobs();
+}
+
+bool encoder::dispatchEncodeJobs() {
     bool res = true;
 
-    for(const auto& wavFile : wavFiles) {
-        if(!encodeOneFile(wavPath + "/" + wavFile)) {
-            res = false;
-        }
+    for(int i = 0; i < m_wavFiles.size(); ++i) {
+        pthread_t threadEnc;
+        pthread_create(&threadEnc, NULL , encoder::createEnc, (void*)&i);
     }
 
     return res;
+}
+
+void* encoder::createEnc(void* idx) {
+    pthread_detach(pthread_self());
+    encoder::encodeOneFile(m_wavPath + "/" + m_wavFiles[*((int*)idx)]);
+    pthread_exit(0);
 }
 
 bool encoder::encodeOneFile(const string& wavFile) {
@@ -84,36 +97,34 @@ bool encoder::encodeOneFile(const string& wavFile) {
     return true;
 }
 
-vector<string> encoder::retrieveWavFiles(const string& wavPath) {
-    cout << "Starting to check .wav path " << wavPath << "..." << endl;
+void encoder::retrieveWavFiles() {
+    m_wavFiles.clear();
+    cout << "Starting to check .wav path " << m_wavPath << "..." << endl;
 
-    DIR *d = opendir(wavPath.c_str());
+    DIR *d = opendir(m_wavPath.c_str());
 
     if(!d) {
-        cerr << "Cannot open " << wavPath << endl;
-        return vector<string>();
+        cerr << "Cannot open " << m_wavPath << endl;
+        return;
     }
 
-    cout << "Checking .wav path " << wavPath << " successfully." << endl;
+    cout << "Checking .wav path " << m_wavPath << " successfully." << endl;
 
-    vector<string> res;
     struct dirent *dir;
 
     while((dir = readdir(d)) != NULL) {
         string fileName = dir->d_name;
 
         if(fileName.size() > 4 && toLowerCase(fileName.substr((int)fileName.size() - 4)) == ".wav") {
-            res.emplace_back(fileName);
+            m_wavFiles.emplace_back(fileName);
         }
     }
 
     closedir(d);
 
-    if(res.empty()) {
-        cerr << "No .wav file inside " << wavPath << "!" << endl;
+    if(m_wavFiles.empty()) {
+        cerr << "No .wav file inside " << m_wavPath << "!" << endl;
     }
- 
-    return res;
 }
 
 string encoder::toLowerCase(const string& s) {

@@ -12,7 +12,7 @@
 
 CC = /usr/bin/g++
 CC_OPTIONS = -std=gnu++14
-LNK_OPTIONS = lib/libmp3lame.a
+LNK_OPTIONS = lib/libmp3lame.a -lpthread
 
 #
 # INCLUDE directories for MP3Encoder
