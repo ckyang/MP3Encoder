@@ -1,6 +1,6 @@
 # MP3Encoder
 
-MP3Encoder is a C++ application that converts WAV file(s) into MP3 file(s), with maintaining a good audio quality in 90% file-size reduction. This application is designed based on [LAME](http://lame.sourceforge.net/) and [POSIX thread](https://www.cs.cmu.edu/afs/cs/academic/class/15492-f07/www/pthreads.html), with cross-platform compatible in Windows / Unix / MacOS.
+MP3Encoder is a C++ application that converts WAV file(s) into MP3 file(s), with maintaining a good audio quality in 90% file-size reduction. This application is designed based on [LAME](http://lame.sourceforge.net/) and [POSIX thread](https://www.cs.cmu.edu/afs/cs/academic/class/15492-f07/www/pthreads.html), with cross-platform compatible in Windows / Linux / MacOS.
 
 # Instruction
 
