@@ -10,9 +10,21 @@
 # Macros
 #
 
+ifeq ($(OS),Windows_NT)
+    LAMELIB := libmp3lame.a_windows
+else
+    UNAME_S := $(shell uname -s)
+    ifeq ($(UNAME_S),Linux)
+        LAMELIB := libmp3lame.a_linux
+    endif
+    ifeq ($(UNAME_S),Darwin)
+        LAMELIB := libmp3lame.a_macos
+    endif
+endif
+
 CC = /usr/bin/g++
 CC_OPTIONS = -std=gnu++14
-LNK_OPTIONS = lib/libmp3lame.a -lpthread
+LNK_OPTIONS = lib/$(LAMELIB) -lpthread
 
 #
 # INCLUDE directories for MP3Encoder
