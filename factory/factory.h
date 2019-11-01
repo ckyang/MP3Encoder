@@ -16,6 +16,7 @@ class factory
 public:
     ~factory();
 
+    // The singleton class, that guarantees there is always only one encoder instance existed in the program.
     static encoder* GetEncoder();
 
 private:

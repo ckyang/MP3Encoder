@@ -46,7 +46,6 @@ bool encoder::encode(const string& wavPath) {
 }
 
 bool encoder::dispatchEncodeJobs() {
-    bool res = true;
     m_processed = 0;
 
     for(int i = 0; i < m_wavFiles.size(); ++i) {
@@ -61,7 +60,7 @@ bool encoder::dispatchEncodeJobs() {
         m_cvEncode.wait(lk, []{return m_processed == m_wavFiles.size();});
     }
 
-    return res;
+    return true;
 }
 
 void* encoder::createEnc(void* arg) {
