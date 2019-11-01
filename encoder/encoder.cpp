@@ -8,8 +8,8 @@
 
 #include <iostream>
 #include <lame/lame.h>
+#include <dirent.h>
 #include <pthread.h>
-#include <filesystem>
 
 #include "encoder.h"
 
@@ -18,7 +18,6 @@
 #define SAMPLE_RATE 44100
 
 using namespace std;
-namespace fs = std::__fs::filesystem;
 
 encoder::encoder() {
 
@@ -88,28 +87,27 @@ bool encoder::encodeOneFile(const string& wavFile) {
 vector<string> encoder::retrieveWavFiles(const string& wavPath) {
     cout << "Starting to check .wav path " << wavPath << "..." << endl;
 
-    if(!fs::exists(wavPath)) {
-        cerr << wavPath << " not existed!" << endl;
-        return vector<string>();
-    }
+    DIR *d = opendir(wavPath.c_str());
 
-    if(fs::perms::none == (fs::status(wavPath).permissions() & fs::perms::owner_write)) {
-        cerr << wavPath << " has no write permission!" << endl;
+    if(!d) {
+        cerr << "Cannot open " << wavPath << endl;
         return vector<string>();
     }
 
     cout << "Checking .wav path " << wavPath << " successfully." << endl;
 
     vector<string> res;
-    fs::recursive_directory_iterator it(wavPath), endit;
+    struct dirent *dir;
 
-    while(it != endit) {
-        if(fs::is_regular_file(*it) && toLowerCase(it->path().extension()) == ".wav") {
-            res.push_back(it->path().filename());
+    while((dir = readdir(d)) != NULL) {
+        string fileName = dir->d_name;
+
+        if(fileName.size() > 4 && toLowerCase(fileName.substr((int)fileName.size() - 4)) == ".wav") {
+            res.emplace_back(fileName);
         }
-
-        ++it;
     }
+
+    closedir(d);
 
     if(res.empty()) {
         cerr << "No .wav file inside " << wavPath << "!" << endl;
