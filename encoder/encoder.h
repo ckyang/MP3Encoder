@@ -11,6 +11,8 @@
 
 #include <string>
 #include <vector>
+#include <mutex>
+#include <condition_variable>
 
 class encoder
 {
@@ -23,9 +25,12 @@ public:
 private:
     static std::string m_wavPath;
     static std::vector<std::string> m_wavFiles;
+    static std::mutex m_mutexEncode, m_mutexProcess;
+    static std::condition_variable m_cvEncode;
+    static int m_processed;
 
     bool dispatchEncodeJobs();
-    static void* createEnc(void* idx);
+    static void* createEnc(void* arg);
     static bool encodeOneFile(const std::string& wavFile);
     void retrieveWavFiles();
     std::string toLowerCase(const std::string& s);

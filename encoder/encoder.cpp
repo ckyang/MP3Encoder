@@ -21,6 +21,10 @@ using namespace std;
 
 string encoder::m_wavPath = "";
 vector<string> encoder::m_wavFiles = vector<string>();
+mutex encoder::m_mutexProcess;
+mutex encoder::m_mutexEncode;
+condition_variable encoder::m_cvEncode;
+int encoder::m_processed = 0;
 
 encoder::encoder() {
 
@@ -43,18 +47,34 @@ bool encoder::encode(const string& wavPath) {
 
 bool encoder::dispatchEncodeJobs() {
     bool res = true;
+    m_processed = 0;
 
     for(int i = 0; i < m_wavFiles.size(); ++i) {
         pthread_t threadEnc;
-        pthread_create(&threadEnc, NULL , encoder::createEnc, (void*)&i);
+        int *arg = (int*)malloc(sizeof(*arg));
+        *arg = i;
+        pthread_create(&threadEnc, NULL , encoder::createEnc, arg);
+    }
+
+    {
+        unique_lock<mutex> lk(m_mutexEncode);
+        m_cvEncode.wait(lk, []{return m_processed == m_wavFiles.size();});
     }
 
     return res;
 }
 
-void* encoder::createEnc(void* idx) {
+void* encoder::createEnc(void* arg) {
     pthread_detach(pthread_self());
-    encoder::encodeOneFile(m_wavPath + "/" + m_wavFiles[*((int*)idx)]);
+    encoder::encodeOneFile(m_wavPath + "/" + m_wavFiles[*((int*)arg)]);
+    free(arg);
+
+    {
+        lock_guard<mutex> lk(m_mutexProcess);
+        ++m_processed;
+    }
+
+    m_cvEncode.notify_all();
     pthread_exit(0);
 }
 
